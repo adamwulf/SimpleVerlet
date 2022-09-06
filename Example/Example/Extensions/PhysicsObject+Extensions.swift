@@ -14,7 +14,7 @@ extension PhysicsObject {
         switch self {
         case let p as Point:
             UIColor.blue.setStroke()
-            let path = UIBezierPath(arcCenter: p.location, radius: p.radius, startAngle: 0, endAngle: 2 + CGFloat.pi, clockwise: true)
+            let path = UIBezierPath(arcCenter: p.location, radius: p.radius, startAngle: 0, endAngle: 2 * CGFloat.pi, clockwise: true)
             path.lineWidth = 1
             path.stroke()
         case let s as Stick:

@@ -22,6 +22,23 @@ public class PhysicsEngine {
         for object in objects {
             object.collide(with: objects)
         }
+
+        for object in objects {
+            if let point = object as? Point {
+                if point.location.x < point.radius {
+                    point.location.x = point.radius
+                }
+                if point.location.y < point.radius {
+                    point.location.y = point.radius
+                }
+                if point.location.x > 500 - point.radius {
+                    point.location.x = 500 - point.radius
+                }
+                if point.location.y > 500 - point.radius {
+                    point.location.y = 500 - point.radius
+                }
+            }
+        }
     }
 
     public func add(object: PhysicsObject) {
