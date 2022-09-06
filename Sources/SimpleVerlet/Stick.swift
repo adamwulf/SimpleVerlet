@@ -43,11 +43,29 @@ public class Stick: PhysicsObject {
     public override func update(_ epsilon: TimeInterval, friction: CGFloat, forces: [PhysicsForce]) {
         p0.update(epsilon, friction: friction, forces: forces)
         p1.update(epsilon, friction: friction, forces: forces)
+        constrain()
     }
 
     public override func collide(with others: [PhysicsObject]) {
         p0.collide(with: others)
         p1.collide(with: others)
+
+        for other in others {
+            guard
+                let point = other as? Point,
+                point.radius > 0
+            else { continue }
+
+            let dist = point.location.distanceToLine(through: p0.location, and: p1.location)
+            if dist < point.radius {
+                let close = point.location.closestPointToLine(through: p0.location, and: p1.location)
+                let vec = (point.location - close).normalized
+                let diff = point.radius - dist
+                point.location += vec * diff / 2
+                p0.location -= vec * diff / 2
+                p1.location -= vec * diff / 2
+            }
+        }
     }
 
     // MARK: - Helpers

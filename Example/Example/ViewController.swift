@@ -26,6 +26,10 @@ class ViewController: UIViewController {
             engine.add(object: ball)
         }
 
+        engine.add(object: Stick(p0: CGPoint(30, 50), p1: CGPoint(120, 80)))
+        engine.add(object: Stick(p0: CGPoint(100, 20), p1: CGPoint(90, 60)))
+        engine.add(object: Stick(p0: CGPoint(300, 20), p1: CGPoint(301, 80)))
+
         displayLink = CADisplayLink(target: self, selector: #selector(tick))
         displayLink.preferredFrameRateRange = CAFrameRateRange(minimum: 30, maximum: 60)
         displayLink.add(to: .current, forMode: .default)

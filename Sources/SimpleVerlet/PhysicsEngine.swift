@@ -24,7 +24,14 @@ public class PhysicsEngine {
         }
 
         for object in objects {
+            var points: [Point] = []
             if let point = object as? Point {
+                points.append(point)
+            } else if let stick = object as? Stick {
+                points.append(stick.p0)
+                points.append(stick.p1)
+            }
+            for point in points {
                 if point.location.x < point.radius {
                     point.location.x = point.radius
                 }
