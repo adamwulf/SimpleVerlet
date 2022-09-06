@@ -1,0 +1,14 @@
+{
+  "pins" : [
+    {
+      "identity" : "swifttoolbox",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/adamwulf/SwiftToolbox.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "7bd0c16498aeb64f1c4ccb201709ac104c182d9c"
+      }
+    }
+  ],
+  "version" : 2
+}

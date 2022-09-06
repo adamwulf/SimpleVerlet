@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftToolbox
+import CoreGraphics
 
 public class Point: PhysicsObject {
     public var location: CGPoint
@@ -40,7 +41,7 @@ public class Point: PhysicsObject {
     }
 
     public init(_ point: CGPoint) {
-        location = .zero
+        location = point
         oldLocation = location
         immovable = false
         attachable = true
@@ -56,8 +57,8 @@ public class Point: PhysicsObject {
 
     public func distance(to point: Point) -> CGFloat {
         let dx = location.x - point.location.x
-        let dy = location.y - point.location.y;
-        return sqrt(dx * dx + dy * dy);
+        let dy = location.y - point.location.y
+        return sqrt(dx * dx + dy * dy)
     }
 
     public func nullVelocity() {
@@ -65,24 +66,29 @@ public class Point: PhysicsObject {
     }
 
     public override func bump() {
-        oldLocation.x = location.x + CGFloat(arc4random() % 10 - 5)
-        oldLocation.y = location.y + CGFloat(arc4random() % 10 - 5)
+        oldLocation.x = location.x + CGFloat(arc4random() % 10) - 5
+        oldLocation.y = location.y + CGFloat(arc4random() % 10) - 5
     }
 
-    public override func update(with friction: CGFloat) {
+    public override func update(_ epsilon: TimeInterval, friction: CGFloat, forces: [PhysicsForce]) {
         guard !immovable else { return }
+        var velocity = self.velocity
+        for force in forces {
+            velocity += force.force(at: location) * epsilon
+        }
         let vel = velocity * friction
         oldLocation = location
         location = location + vel
     }
 
-    public func collide(with others: [PhysicsObject]) {
+    public override func collide(with others: [PhysicsObject]) {
         guard radius > 0 else { return }
         for point in others {
+            guard point != self else { continue }
             if let point = point as? Point {
                 guard point.radius > 0 else { return }
 
-                let dist = distance(to: point);
+                let dist = distance(to: point)
                 let move = radius + point.radius - dist
 
                 if dist == 0 {
@@ -91,13 +97,12 @@ public class Point: PhysicsObject {
                     let distToMove = (point.location - location) / dist * move
 
                     location = location - distToMove / 2
-                    point.location = point.location - distToMove / 2
+                    point.location = point.location + distToMove / 2
                 }
             }
         }
     }
 
-    public override func constrain() {
-        // noop
+    public func constrain() {
     }
 }

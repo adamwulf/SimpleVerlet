@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftToolbox
+import CoreGraphics
 
 public class Stick: PhysicsObject {
     public var p0: Point
@@ -20,11 +21,11 @@ public class Stick: PhysicsObject {
     public var stress: CGFloat {
         // calculate stress
         let currLength = p0.distance(to: p1)
-        let percDiff = abs(currLength - length) / length;
+        let percDiff = abs(currLength - length) / length
 
         // .0 => blue
         // .1 => red
-        return min(0.1, percDiff) * 10;
+        return min(0.1, percDiff) * 10
     }
 
     public init(p0: Point, p1: Point) {
@@ -39,6 +40,39 @@ public class Stick: PhysicsObject {
         length = p0.distance(to: p1)
     }
 
+    public override func update(_ epsilon: TimeInterval, friction: CGFloat, forces: [PhysicsForce]) {
+        p0.update(epsilon, friction: friction, forces: forces)
+        p1.update(epsilon, friction: friction, forces: forces)
+    }
+
+    public override func collide(with others: [PhysicsObject]) {
+        p0.collide(with: others)
+        p1.collide(with: others)
+    }
+
+    // MARK: - Helpers
+
+    private func constrain() {
+        let delta = p1.location - p0.location
+        let distance = p1.distance(to: p0)
+
+        let difference = length - distance
+        var percent = difference / distance / 2
+        if percent.isNaN || !percent.isFinite {
+            percent = 0
+        }
+        let offset = delta * percent
+
+        if !p0.immovable {
+            p0.location = p0.location - offset
+        }
+        if !p1.immovable {
+            p1.location = p1.location + offset
+        }
+    }
+}
+
+extension Stick {
     public func rotate(by rads: CGFloat) {
         let c = CGPoint(x: (p0.x + p1.x) / 2, y: (p0.y + p1.y) / 2)
         let transform: CGAffineTransform = .init(translationX: c.x, y: c.y).rotated(by: rads).translatedBy(x: -c.x, y: -c.y)
@@ -53,36 +87,5 @@ public class Stick: PhysicsObject {
     public func translate(by vec: CGVector) {
         p0.location = p0.location + vec
         p1.location = p1.location + vec
-    }
-
-    public override func constrain() {
-        let delta = p1.location - p0.location
-        let distance = p1.distance(to: p0)
-
-        let difference = length - distance;
-        var percent = difference / distance / 2;
-        if(percent.isNaN || !percent.isFinite){
-            percent = 0;
-        }
-        let offset = delta * percent
-
-        if !p0.immovable {
-            p0.location = p0.location - offset
-        }
-        if !p1.immovable {
-            p1.location = p1.location + offset
-        }
-    }
-
-    public func replace(point: Point, with other: Point) -> Bool {
-        guard p0 === point || p1 === point else { return false }
-
-        if p0 === point {
-            p0 = other
-        }
-        if p1 === point {
-            p1 = other
-        }
-        return true
     }
 }
