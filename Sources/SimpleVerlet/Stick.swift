@@ -56,9 +56,9 @@ public class Stick: PhysicsObject {
                 point.radius > 0
             else { continue }
 
-            let dist = point.location.distanceToLine(through: p0.location, and: p1.location)
+            let dist = point.location.distanceToSegment(through: p0.location, and: p1.location)
             if dist < point.radius {
-                let close = point.location.closestPointToLine(through: p0.location, and: p1.location)
+                let close = point.location.closestPointToSegment(through: p0.location, and: p1.location)
                 let vec = (point.location - close).normalized
                 let diff = point.radius - dist
                 point.location += vec * diff / 2

@@ -17,7 +17,7 @@ public class PhysicsEngine {
 
     public func tick(_ epsilon: TimeInterval) {
         for object in objects {
-            object.update(epsilon, friction: 1, forces: forces)
+            object.update(epsilon, friction: 0.99, forces: forces)
         }
         for object in objects {
             object.collide(with: objects)
