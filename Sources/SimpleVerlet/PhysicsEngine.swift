@@ -6,10 +6,13 @@
 //
 
 import Foundation
+import SwiftToolbox
+import CoreGraphics
 
 public class PhysicsEngine {
     public private(set) var objects: [PhysicsObject] = []
     public private(set) var forces: [PhysicsForce] = []
+    public var friction: CGFloat = 0.99
 
     public init() {
         // noop
@@ -17,7 +20,7 @@ public class PhysicsEngine {
 
     public func tick(_ epsilon: TimeInterval) {
         for object in objects {
-            object.update(epsilon, friction: 0.99, forces: forces)
+            object.update(epsilon, friction: friction, forces: forces)
         }
         for object in objects {
             object.collide(with: objects)
@@ -33,16 +36,24 @@ public class PhysicsEngine {
             }
             for point in points {
                 if point.location.x < point.radius {
+                    let velocity = point.velocity
                     point.location.x = point.radius
+                    point.velocity.dx = -velocity.dx
                 }
                 if point.location.y < point.radius {
+                    let velocity = point.velocity
                     point.location.y = point.radius
+                    point.velocity.dy = -velocity.dy
                 }
                 if point.location.x > 500 - point.radius {
+                    let velocity = point.velocity
                     point.location.x = 500 - point.radius
+                    point.velocity.dx = -velocity.dx
                 }
                 if point.location.y > 500 - point.radius {
+                    let velocity = point.velocity
                     point.location.y = 500 - point.radius
+                    point.velocity.dy = -velocity.dy
                 }
             }
         }

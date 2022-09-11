@@ -52,7 +52,12 @@ public class Point: PhysicsObject {
     }
 
     public var velocity: CGVector {
-        return location - oldLocation
+        get {
+            return location - oldLocation
+        }
+        set {
+            oldLocation = location - newValue
+        }
     }
 
     public func distance(to point: Point) -> CGFloat {
