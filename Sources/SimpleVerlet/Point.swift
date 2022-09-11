@@ -36,6 +36,15 @@ public class Point: PhysicsObject {
         }
     }
 
+    public var area: CGFloat {
+        get {
+            return CGFloat.pi * radius * radius
+        }
+        set {
+            radius = sqrt(newValue / CGFloat.pi)
+        }
+    }
+
     public override convenience init() {
         self.init(.zero)
     }

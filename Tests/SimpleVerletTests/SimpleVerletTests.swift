@@ -2,6 +2,17 @@ import XCTest
 @testable import SimpleVerlet
 
 final class SimpleVerletTests: XCTestCase {
+
+    func testArea() throws {
+        let point1 = Point(100, 100)
+        point1.radius = 10
+
+        let point2 = Point(200, 200)
+        point2.area = point1.area
+
+        XCTAssertEqual(point1.radius, point2.radius, accuracy: 0.00001)
+    }
+
     func testEngine() throws {
         let engine = PhysicsEngine()
         engine.friction = 1
