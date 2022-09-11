@@ -12,7 +12,7 @@ import CoreGraphics
 public class PhysicsEngine {
     public private(set) var objects: [PhysicsObject] = []
     public private(set) var forces: [PhysicsForce] = []
-    public var friction: CGFloat = 0.99
+    @Clamped(0...1) public var friction: CGFloat = 0.01
     public var box: CGRect?
 
     public init() {

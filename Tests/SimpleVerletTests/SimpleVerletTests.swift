@@ -13,6 +13,22 @@ final class SimpleVerletTests: XCTestCase {
         XCTAssertEqual(point1.radius, point2.radius, accuracy: 0.00001)
     }
 
+    func testApplyForce() throws {
+        let point1 = Point(100, 100)
+        point1.radius = 10
+        point1.mass = point1.area
+
+        XCTAssertEqual(point1.mass, 314.159265, accuracy: 0.000001)
+        XCTAssertEqual(point1.velocity, .zero)
+
+        let force = ConstantForce(CGVector(dx: 0, dy: 5))
+        let duration: TimeInterval = 1
+        point1.update(duration, friction: 0, forces: [force])
+
+        XCTAssertEqual(point1.velocity.dx, 0)
+        XCTAssertEqual(point1.velocity.dy, 0.01591549433, accuracy: 0.000001)
+    }
+
     func testEngine() throws {
         let engine = PhysicsEngine()
         engine.friction = 1

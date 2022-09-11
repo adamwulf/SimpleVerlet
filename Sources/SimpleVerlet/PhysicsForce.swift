@@ -13,7 +13,7 @@ public class PhysicsForce: Equatable, Identifiable {
 
     public var id = UUID()
 
-    public func force(at point: CGPoint) -> CGVector {
+    public func acceleration(at point: CGPoint, for mass: CGFloat) -> CGVector {
         return .zero
     }
 

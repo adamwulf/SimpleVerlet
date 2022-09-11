@@ -10,6 +10,7 @@ import SwiftToolbox
 import CoreGraphics
 
 public class Point: PhysicsObject {
+    public var mass: CGFloat = 0
     public var location: CGPoint
     public var oldLocation: CGPoint
     public var immovable: Bool
@@ -91,10 +92,14 @@ public class Point: PhysicsObject {
     public override func update(_ epsilon: TimeInterval, friction: CGFloat, forces: [PhysicsForce]) {
         guard !immovable else { return }
         var velocity = self.velocity
-        for force in forces {
-            velocity += force.force(at: location) * epsilon
+        if mass != 0 {
+            for force in forces {
+                let accel = force.acceleration(at: location, for: mass)
+                let deltaV = accel * epsilon
+                velocity += deltaV
+            }
         }
-        let vel = velocity * friction
+        let vel = velocity * (1 - friction)
         oldLocation = location
         location = location + vel
     }
