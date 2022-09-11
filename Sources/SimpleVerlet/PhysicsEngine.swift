@@ -12,7 +12,7 @@ import CoreGraphics
 public class PhysicsEngine {
     public private(set) var objects: [PhysicsObject] = []
     public private(set) var forces: [PhysicsForce] = []
-    @Clamped(0...1) public var friction: CGFloat = 0.01
+    @Clamped(0...1) public var friction: CGFloat = 0
     public var box: CGRect?
 
     public init() {
@@ -23,6 +23,7 @@ public class PhysicsEngine {
         for object in objects {
             object.update(epsilon, friction: friction, forces: forces)
         }
+
         for object in objects {
             object.collide(with: objects)
         }
@@ -38,23 +39,27 @@ public class PhysicsEngine {
             if let box = box {
                 for point in points {
                     if point.location.x < box.minX + point.radius {
+                        let overshoot = box.minX + point.radius - point.location.x
                         let velocity = point.velocity
-                        point.location.x = box.minX + point.radius
+                        point.location.x = box.minX + point.radius + overshoot
                         point.velocity.dx = -velocity.dx
                     }
                     if point.location.y < box.minY + point.radius {
+                        let overshoot = box.minY + point.radius - point.location.y
                         let velocity = point.velocity
-                        point.location.y = box.minY + point.radius
+                        point.location.y = box.minY + point.radius + overshoot
                         point.velocity.dy = -velocity.dy
                     }
                     if point.location.x > box.maxX - point.radius {
+                        let overshoot = box.maxX - point.radius - point.location.x
                         let velocity = point.velocity
-                        point.location.x = box.maxX - point.radius
+                        point.location.x = box.maxX - point.radius + overshoot
                         point.velocity.dx = -velocity.dx
                     }
                     if point.location.y > box.maxY - point.radius {
+                        let overshoot = box.maxY - point.radius - point.location.y
                         let velocity = point.velocity
-                        point.location.y = box.maxY - point.radius
+                        point.location.y = box.maxY - point.radius + overshoot
                         point.velocity.dy = -velocity.dy
                     }
                 }

@@ -14,24 +14,67 @@ final class SimpleVerletTests: XCTestCase {
     }
 
     func testApplyForce() throws {
-        let point1 = Point(100, 100)
-        point1.radius = 10
-        point1.mass = point1.area
+        let point = Point(100, 100)
+        point.radius = 10
+        point.mass = point.area
 
-        XCTAssertEqual(point1.mass, 314.159265, accuracy: 0.000001)
-        XCTAssertEqual(point1.velocity, .zero)
+        XCTAssertEqual(point.mass, 314.159265, accuracy: 0.000001)
+        XCTAssertEqual(point.velocity, .zero)
 
         let force = ConstantForce(CGVector(dx: 0, dy: 5))
         let duration: TimeInterval = 1
-        point1.update(duration, friction: 0, forces: [force])
+        point.update(duration, friction: 0, forces: [force])
 
-        XCTAssertEqual(point1.velocity.dx, 0)
-        XCTAssertEqual(point1.velocity.dy, 0.01591549433, accuracy: 0.000001)
+        XCTAssertEqual(point.velocity.dx, 0)
+        XCTAssertEqual(point.velocity.dy, 0.01591549433, accuracy: 0.000001)
+    }
+
+    func testBounceOnBox() throws {
+        let point = Point(11, 11)
+        point.radius = 10
+        point.mass = point.area
+        point.velocity = CGVector(-1, -1)
+
+        let engine = PhysicsEngine()
+        engine.box = CGRect(0, 0, 100, 100)
+        engine.add(object: point)
+
+        engine.tick(1)
+
+        XCTAssertEqual(point.location, CGPoint(10, 10))
+        XCTAssertEqual(point.velocity, CGVector(-1, -1))
+
+        engine.tick(1)
+
+        XCTAssertEqual(point.location, CGPoint(11, 11))
+        XCTAssertEqual(point.velocity, CGVector(1, 1))
+
+    }
+
+    func testFractionalBounceOnBox() throws {
+        let point = Point(11.5, 11.5)
+        point.radius = 10
+        point.mass = point.area
+        point.velocity = CGVector(-1, -1)
+
+        let engine = PhysicsEngine()
+        engine.box = CGRect(0, 0, 100, 100)
+        engine.add(object: point)
+
+        engine.tick(1)
+
+        XCTAssertEqual(point.location, CGPoint(10.5, 10.5))
+        XCTAssertEqual(point.velocity, CGVector(-1, -1))
+
+        engine.tick(1)
+
+        XCTAssertEqual(point.location, CGPoint(10.5, 10.5))
+        XCTAssertEqual(point.velocity, CGVector(1, 1))
+
     }
 
     func testEngine() throws {
         let engine = PhysicsEngine()
-        engine.friction = 1
 
         let ball1 = Point(-31, 0)
         ball1.radius = 30
