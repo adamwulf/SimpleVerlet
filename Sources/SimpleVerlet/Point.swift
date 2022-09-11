@@ -40,6 +40,10 @@ public class Point: PhysicsObject {
         self.init(.zero)
     }
 
+    convenience init(_ x: CGFloat, _ y: CGFloat) {
+        self.init(CGPoint(x, y))
+    }
+
     public init(_ point: CGPoint) {
         location = point
         oldLocation = location
