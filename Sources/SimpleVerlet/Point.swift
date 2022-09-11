@@ -46,6 +46,16 @@ public class Point: PhysicsObject {
         }
     }
 
+    /// momentum = mass * velocity
+    public var momentum: CGFloat {
+        return mass * velocity.magnitude
+    }
+
+    /// K = 1/2 * m * v^2
+    public var kineticEnergy: CGFloat {
+        return 0.5 * mass * velocity.magnitude * velocity.magnitude
+    }
+
     public override convenience init() {
         self.init(.zero)
     }
@@ -92,12 +102,10 @@ public class Point: PhysicsObject {
     public override func update(_ epsilon: TimeInterval, friction: CGFloat, forces: [PhysicsForce]) {
         guard !immovable else { return }
         var velocity = self.velocity
-        if mass != 0 {
-            for force in forces {
-                let accel = force.acceleration(at: location, for: mass)
-                let deltaV = accel * epsilon
-                velocity += deltaV
-            }
+        for force in forces {
+            let accel = force.acceleration(at: location, for: mass)
+            let deltaV = accel * epsilon
+            velocity += deltaV
         }
         let vel = velocity * (1 - friction)
         oldLocation = location
@@ -117,15 +125,33 @@ public class Point: PhysicsObject {
                 if dist == 0 {
                     bump()
                 } else if move > 0 {
+                    let v1 = Self.velocityAfterCollision(self, point)
+                    let v2 = Self.velocityAfterCollision(point, self)
+
                     let distToMove = (point.location - location) / dist * move
 
                     location = location - distToMove / 2
                     point.location = point.location + distToMove / 2
+
+                    self.velocity = v1
+                    point.velocity = v2
                 }
             }
         }
     }
 
     public func constrain() {
+        // noop
+    }
+
+    static func velocityAfterCollision(_ p1: Point, _ p2: Point) -> CGVector {
+        guard p1.mass != 0, p2.mass != 0 else { return p1.velocity }
+        let term1 = p1.velocity
+        let term2 = -2 * p2.mass / (p1.mass + p2.mass)
+        let locDiff = p1.location - p2.location
+        let term3 = ((p1.velocity - p2.velocity) ⋅ (p1.location - p2.location)) / locDiff.magnitude.squared()
+        let term4 = locDiff
+
+        return term1 + (term2 * term3 * term4)
     }
 }

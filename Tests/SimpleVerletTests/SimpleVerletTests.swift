@@ -73,19 +73,27 @@ final class SimpleVerletTests: XCTestCase {
 
     }
 
+    // elastic collision example from https://www.problemsphysics.com/momentum/collisions.html
     func testEngine() throws {
         let engine = PhysicsEngine()
 
-        let ball1 = Point(-31, 0)
+        let ball1 = Point(0, 0)
         ball1.radius = 30
-        ball1.velocity.dx = 1
+        ball1.mass = 0.1
+        ball1.velocity.dx = 10
 
-        let ball2 = Point(31, 0)
+        let ball2 = Point(65, 0)
         ball2.radius = 30
-        ball2.velocity.dx = -1
+        ball2.mass = 0.2
+        ball2.velocity.dx = 5
 
         engine.add(object: ball1)
         engine.add(object: ball2)
+
+        XCTAssertEqual(ball1.momentum, 1)
+        XCTAssertEqual(ball2.momentum, 1)
+        XCTAssertEqual(ball1.kineticEnergy, 5)
+        XCTAssertEqual(ball2.kineticEnergy, 2.5)
 
         engine.tick(1)
 
@@ -93,6 +101,8 @@ final class SimpleVerletTests: XCTestCase {
         XCTAssertEqual(ball1.velocity.dx, 1)
         XCTAssertEqual(ball2.location.x, 30)
         XCTAssertEqual(ball2.velocity.dx, -1)
+
+        XCTAssertEqual(ball1.momentum, -1)
 
         engine.tick(1)
 

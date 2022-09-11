@@ -20,6 +20,7 @@ public class ConstantForce: PhysicsForce {
 
     /// Returns the acceleration for the input mass at the given point
     public override func acceleration(at point: CGPoint, for mass: CGFloat) -> CGVector {
+        guard mass != 0 else { return .zero }
         return force / mass
     }
 }

@@ -10,5 +10,5 @@ import CoreGraphics
 import SimpleVerlet
 
 extension PhysicsForce {
-    static let gravity = ConstantForce(CGVector(dx: 0, dy: 10))
+    static let gravity = GravityForce(CGVector(dx: 0, dy: 10))
 }

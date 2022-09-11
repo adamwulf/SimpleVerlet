@@ -20,7 +20,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        engine.friction = 0.999
+        engine.friction = 0.001
         engine.box = CGRect(0, 0, 500, 500)
         engine.add(force: PhysicsForce.gravity)
 
