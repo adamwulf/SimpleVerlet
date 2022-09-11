@@ -13,6 +13,7 @@ public class PhysicsEngine {
     public private(set) var objects: [PhysicsObject] = []
     public private(set) var forces: [PhysicsForce] = []
     public var friction: CGFloat = 0.99
+    public var box: CGRect?
 
     public init() {
         // noop
@@ -34,26 +35,28 @@ public class PhysicsEngine {
                 points.append(stick.p0)
                 points.append(stick.p1)
             }
-            for point in points {
-                if point.location.x < point.radius {
-                    let velocity = point.velocity
-                    point.location.x = point.radius
-                    point.velocity.dx = -velocity.dx
-                }
-                if point.location.y < point.radius {
-                    let velocity = point.velocity
-                    point.location.y = point.radius
-                    point.velocity.dy = -velocity.dy
-                }
-                if point.location.x > 500 - point.radius {
-                    let velocity = point.velocity
-                    point.location.x = 500 - point.radius
-                    point.velocity.dx = -velocity.dx
-                }
-                if point.location.y > 500 - point.radius {
-                    let velocity = point.velocity
-                    point.location.y = 500 - point.radius
-                    point.velocity.dy = -velocity.dy
+            if let box = box {
+                for point in points {
+                    if point.location.x < box.minX + point.radius {
+                        let velocity = point.velocity
+                        point.location.x = box.minX + point.radius
+                        point.velocity.dx = -velocity.dx
+                    }
+                    if point.location.y < box.minY + point.radius {
+                        let velocity = point.velocity
+                        point.location.y = box.minY + point.radius
+                        point.velocity.dy = -velocity.dy
+                    }
+                    if point.location.x > box.maxX - point.radius {
+                        let velocity = point.velocity
+                        point.location.x = box.maxX - point.radius
+                        point.velocity.dx = -velocity.dx
+                    }
+                    if point.location.y > box.maxY - point.radius {
+                        let velocity = point.velocity
+                        point.location.y = box.maxY - point.radius
+                        point.velocity.dy = -velocity.dy
+                    }
                 }
             }
         }

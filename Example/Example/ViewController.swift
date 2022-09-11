@@ -7,6 +7,7 @@
 
 import UIKit
 import SimpleVerlet
+import SwiftToolbox
 
 class ViewController: UIViewController {
 
@@ -20,6 +21,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         engine.friction = 0.999
+        engine.box = CGRect(0, 0, 500, 500)
         engine.add(force: PhysicsForce.gravity)
 
 //        for _ in 0..<10 {
