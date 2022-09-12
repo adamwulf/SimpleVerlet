@@ -20,26 +20,29 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        engine.friction = 0.001
+        engine.friction = 0.01
         engine.box = CGRect(0, 0, 500, 500)
         engine.add(force: PhysicsForce.gravity)
 
-//        for _ in 0..<10 {
-//            let ball = Point(CGPoint(CGFloat.random(in: 0..<200), CGFloat.random(in: 0..<200)))
-//            ball.radius = CGFloat.random(in: 10..<60)
-//            ball.velocity = CGVector(CGFloat.random(in: -10...10), CGFloat.random(in: -10...10))
-//            engine.add(object: ball)
-//        }
+        for _ in 0..<10 {
+            let ball = Point(CGPoint(CGFloat.random(in: 0..<200), CGFloat.random(in: 0..<200)))
+            ball.radius = CGFloat.random(in: 10..<60)
+            ball.mass = ball.area
+            ball.velocity = CGVector(CGFloat.random(in: -10...10), CGFloat.random(in: -10...10))
+            engine.add(object: ball)
+        }
 
-        ball = Point(CGPoint(100, 40))
-        ball.radius = 30
-        ball.velocity = CGVector(0.5, 0)
-        engine.add(object: ball)
-
-        let other = Point(CGPoint(200, 40))
-        other.radius = 30
-        other.velocity = CGVector(-0.5, 0)
-        engine.add(object: other)
+//        ball = Point(CGPoint(100, 40))
+//        ball.radius = 30
+//        ball.mass = 100
+//        ball.velocity = CGVector(0.5, 0)
+//        engine.add(object: ball)
+//
+//        let other = Point(CGPoint(200, 40))
+//        other.radius = 30
+//        other.mass = 10
+//        other.velocity = CGVector(-0.5, 0)
+//        engine.add(object: other)
 
 //        engine.add(object: Stick(p0: CGPoint(30, 50), p1: CGPoint(120, 80)))
 //        engine.add(object: Stick(p0: CGPoint(100, 20), p1: CGPoint(90, 60)))
